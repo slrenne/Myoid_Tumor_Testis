@@ -1,0 +1,212 @@
+---
+title: "Myoid gonadal tumor, a Bayesian analysis. Supplementary"
+author: 
+  - Salvatore Lorenzo Renne, 
+  - Marina Valeri, 
+  - Antonella Tosoni, 
+  - Alessia Bertolotti,
+  - Roberta Rossi,
+  - Giuseppe Renne,
+  - Maurizio Colecchia.
+date: ''
+output:
+  bookdown::pdf_document2: default
+---
+
+
+```{r setup, include= FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(rethinking)
+```
+
+#  Materials and methods
+## Supplementary Table 1
+### Antibodies used for immunohistochemistry	
+|Antibody|Clone|Dilution|Retrieval Buffer|Source|
+|---------|------|-----|-----------|------------------|
+|$\alpha$-Smooth Muscle Actin|1A4|1:800|Tris/EDTA (pH 9) 15'| DAKO, Glostrup, Denmark|
+H-caldelsmon|h-CD|1:200|Citrate (pH 6,1) 15'|DAKO, Glostrup, Denmark
+FOXL2|polyclonal|1:800|Tris/EDTA (pH 9) 30'|AbCAM, Cambridge, UK
+Inhibin|R1|1:50|Tris/EDTA (pH 9) 15'|BioRAD (Formerly AbD Serotec), Kidlington, UK
+S100 protein|-|1:4000|Citrate (pH 6,1) 15'|DAKO, Glostrup, Denmark
+SF1|N1665|1:25|Tris/EDTA (pH 9) 60'|THERMOFISHER Scientific, Rockford, IL, USA
+Ki-67|MIB-1|1:400|Tris/EDTA (pH 9) 15'|DAKO, Glostrup, Denmark
+$\beta$-Catenin|14|1:1000|Tris/EDTA (pH 9) 30'|TRANSDUCTION LABORATORIES, Lexington, KY, USA
+Desmin|D33|1:400|Tris/EDTA (pH 9) 15'|DAKO, Glostrup, Denmark
+WT180|WT49|1:80|Tris/EDTA (pH 9) 30'|MONOSAN, Uden, The Netherlands
+
+
+
+## Research strategy
+A systematic literature search was performed on December 9th, 2019 in Medline and Web of Science databases according to the following search strategy
+MEDLINE: myoid[All Fields] AND ("testicular neoplasms"[MeSH Terms] OR ("testicular"[All Fields] AND "neoplasms"[All Fields]) OR "testicular neoplasms"[All Fields] OR ("tumor"[All Fields] AND "testis"[All Fields]) OR "tumor testis"[All Fields])
+Web of Science: TOPIC: (myoid tumor testis). Timespan: All years. Indexes: SCI-EXPANDED, SSCI, A&HCI, CPCI-S, CPCI-SSH, ESCI. The search strategy flow chart is depicted in figure \@ref(fig:strategy). 
+
+```{r strategy, echo=FALSE, fig.cap="Search strategy flow chart.", out.width = '100%'}
+knitr::include_graphics("/Users/lollo/Dropbox/Myoid tumor/MA/suppl_searching.jpg")
+```
+
+# Results
+## Citation network 
+Citation network structure of the published cases of Myoid Gonadal Tumors is hilighted in figure \@ref(fig:network). Each arrow indicates a citation; papers from Greco and Evans were the most cited. 
+
+```{r network, echo=FALSE, fig.cap="Citation network.", out.width = '70%'}
+knitr::include_graphics("/Users/lollo/Dropbox/Myoid tumor/MA/Supplementary_Figure_Citation.jpeg")
+```
+
+## Age model
+### Prior predictive simulations
+We modeled age $A_i$ as normally distributed, with mean $\mu$ and standard deviation $\sigma$. 
+$$A_i \sim Normal( \mu, \sigma)$$
+We looked for a prior distribution with a mean *compatible* with human age. We simulated several normal distribution (see figure \@ref(fig:PrPSage)).
+
+```{r PrPSage, echo=FALSE,fig.cap="Prior predictive simulation for age. The vertical lines indicate 0 and 120 years."}
+new_title <- c("Normal( 60, 10)", "Normal( 60, 15)", "Normal( 60, 20)")
+par(mfrow=c(1,3) ) # 3 plots in 1 row 
+for ( d in 1:3) 
+{ sigma <- c(10,15,20) 
+  sample_mu <- rnorm( 1e4 , 60 , sigma[d] )
+  sample_sigma <- rexp( 1e4 , 1 )
+  prior_h <- rnorm( 1e4 , sample_mu , sample_sigma )
+  dens( prior_h, xlim= c(0,120), main = new_title[d], ylim=c(0,0.041), xlab = "Age, years")
+  abline(v=c(0,120), col=c("blue", "red"), lty=c(1,2), lwd=c(1, 3))
+}
+```
+
+For $\mu$ we chose a $Normal(60, 20)$ that put most of the mass of the mean in the a plausible range. We chose a $Exponential(1)$ prior for the standard deviation $\sigma$ for maximum entropy reason. 
+
+### Model coefficients
+
+Inference for Stan model: 4 chains, each with iter=1000; warmup=500; thin=1; post-warmup draws per chain=500, total post-warmup draws=2000.
+
+Parameter | mean | sd | 5.5% |94.5% | n_eff | $\hat{R}4$  |
+----------|------|----|------|------|-------|----------|
+$\mu$    |37.87 |2.82 |33.45 |42.39 | 1047    | 1 |
+$\sigma$ |11.39 |1.45  |9.35 |13.90 | 1194     |1|
+
+Samples were drawn using NUTS. For each parameter, n_eff is a crude measure of effective sample size, and $\hat{R}$ is the potential scale reduction factor on split chains (at 
+convergence, $\hat{R}$=1).
+
+## Size Model
+### Prior predictive simulations
+Similarly, we modeled size $S_i$ as normally distributed, with mean $\mu$ and $\sigma$. 
+$$S_i \sim Normal( \mu, \sigma)$$
+Again with prior predictive simulation we looked for a prior distribution with a mean *compatible* with the meaning of size (i.e. most of the mass would not be non-negative). We simulated several normal distribution (see figure \@ref(fig:PrPSsize):
+
+```{r PrPSsize, fig.cap="Prior predictive simulation for size. The vertical lines indicate 0 cm."}
+new_title <- c("Normal(5, 2)", "Normal(5, 1)", "Normal(5, 0.5)")
+par(mfrow=c(1,3) )
+for ( d in 1:3) 
+{ sigma <- c(2,1,0.5) 
+sample_mu <- rnorm( 1e4 ,5 , sigma[d] )
+sample_sigma <- rexp( 1e4 , 1 )
+prior_h <- rnorm( 1e4 , sample_mu , sample_sigma )
+dens( prior_h, xlim= c(-3,10), main = new_title[d],  xlab = "Size, cm")
+abline(v=0, col="blue")
+}
+```
+
+For $\mu$ we chose a $Normal(5, 0.75)$ that put most of the mass of the mean in the a plausible range. We chose a $Exponential(1)$ prior for the standard deviation $\sigma$ for maximum entropy reason. 
+
+### Model coefficients
+
+Inference for Stan model: 4 chains, each with iter=1000; warmup=500; thin=1; post-warmup draws per chain=500, total post-warmup draws=2000.
+
+Parameter | mean | sd | 5.5% |94.5% | n_eff | $\hat{R}4$  |
+----------|------|----|------|------|-------|----------|
+$\mu$|    2.82| 0.33| 2.35|  3.39|   809|  1.01|
+$\sigma$ |1.32| 0.28| 0.96|  1.82|   731|  1.01|
+
+## Mitosis Model
+### Prior predictive simulations
+Similarly, we modeled size $M_i$ as zero inflated Poisson (ZIPoisson) with rate $\lambda$; the zero inflated Poisson is a type of model that is used in [ecology](https://www.jstor.org/stable/27650840?seq=1).
+\begin{align*}
+M_i &\sim ZIPoisson(p_i, \lambda_i)\\
+logit(p_i) &= \alpha_p\\
+log(\lambda_i) &= \alpha_\lambda\\
+\alpha_p &\sim Normal(-1.5, 1)\\
+\alpha_\lambda &\sim Normal(0.5, 0.5)
+\end{align*}
+
+
+```{r PrPSmitosis,fig.cap="Prior predictive simulation for mitotis."}
+new_title <- c("ZIPoisson(1, 0.5)", "ZIPoisson(1, 1)", "ZIPoisson(1, 1.5)")
+par(mfrow=c(1,3) ) # 3 plots in 1 row 
+for ( d in 1:3) 
+{ lambda <- c(0.5,1,1.5) 
+p <- runif( 1e4)
+prior_m <- rzipois( 1e4 , p, lambda[d] )
+dens( prior_m, xlim= c(0,10), ylim= c(0,8), main = new_title[d], xlab = "Mitosis/10HPF")
+}
+```
+
+We chose as a prior for $\alpha_p$ a $Normal(-1.5, 1)$, since we expected more often than not to see mitosis; on the other hand we chose $Normal(0.5, 0.5)$ for $\alpha_\lambda$ since we executed a low mitotic activity (see figure \@ref(fig:PrPSmitosis)).
+
+### Model coefficients
+
+Inference for Stan model: 4 chains, each with iter=1000; warmup=500; thin=1; post-warmup draws per chain=500, total post-warmup draws=2000.
+
+Parameter | mean | sd | 5.5% |94.5% | n_eff | $\hat{R}4$  |
+----------|------|----|------|------|-------|----------|
+$\alpha_p$ |-0.38 |0.56 |-1.28|  0.45  |1155  |   1|
+$\alpha_\lambda$ | 1.08 |0.22 | 0.72 | 1.42|  1083   |  1|
+
+## Epithelial Differentiation Model
+To combine the different methods for assessing the epithelial differentiation and account for the fact that all of them do share this feature we used a hierarchical multilevel model. First we decided to simplify the outcome in presence absence of the feature, because even if immunohistochemistry was reported with more detail, it seems difficult to harmonize these findings with the electron microscopy. We hence modeled this feature as a binomial distribution of 1 trial (also known as Bernoulli distribution). 
+\begin{align*}
+E_i &\sim Binomial(1, p_i)\\
+logit(p_i) &= \alpha_{feature[i]}\\
+\alpha_j &\sim Normal(\bar{\alpha},\sigma)\qquad, \textrm{for}\; j=1..4\\
+\bar{\alpha} &\sim Normal(0, 1.5)\\
+\sigma &\sim Exponential(1)
+\end{align*}
+
+The presence of epithelial differentiation of the single cases ($E_i$) was therefore modeled as the $inverse logit$ of the intercept $\alpha$ of each $feature$ (i.e. the different cytokeratins and the presence of desmosomes). These $\alpha_j$ are called the adaptive priors because they are inferred from the parameters starting from an average prior, the $\bar{\alpha}$; $\bar{\alpha}$ and $\sigma$ represent the hyperpriors of this model.
+
+Hierarchical models are burdened by the divergent transitions and therefore need to be reparameterized in a matematically equivalent non-centered version, to facilitate the sampling. In this simple model tranforming the $\alpha_{feature[i]}$ in its equivalent $z$ score will avoid all the divergent transitions: 
+
+\begin{align*}
+E_i &\sim Binomial(1, p_i)\\
+logit(p_i) &= \bar{\alpha} + z_{feature[i]}\sigma\\
+z_j &\sim Normal(0,1)\qquad, \textrm{for}\; j=1..4\\
+\bar{\alpha} &\sim Normal(0, 1.5)\\
+\sigma &\sim Exponential(1)
+\end{align*}
+
+### Prior predictive simulations
+In this case the outcome variable can only be 0 or 1 but the prior probability is the $inverse\ logit$ of our intecept $\alpha$. the interpretation of the hyperprior on $\bar{\alpha}$ can be therefore counterintuitive: in the logit scale $0$ represents $50\%$ and the more we get further from it the more we go toward infinity. 
+With the following code we simulate a sequence of 10,000 numbers from $-6$ to $6$ stored in the vector $x$, and we do the $inverse\ logit$ storing the result in the vector $y$, we plot these two vectors and the result is shown in figure \@ref(fig:InverseLogit):
+
+```{r InverseLogit,fig.cap="Understanding the inverse logit.", echo=TRUE}
+x <- seq(from = -6, to = 6, length.out =1e4)
+y <- inv_logit(x)
+plot(x,y, main= "y = Inverse logit(x)", pch=20)
+```
+
+This happens really *fast* with value of greater then $5$ that are at $100\%$ and smaller then $-5$ that are at $0\%$. This means that if we center our prior at $0$ (i.e. $50\%$) if we choose a standard deviation that put a lot of mass outside the range $\pm5$ we will have a model that *thinks* that an the event has a probability of either happening either not. So in this case a prior like $10$ will put $95\%$of the mass between $\pm20$. This is clear from the prior predictive simulations (Figure \@ref(fig:PrPSepdif)). 
+
+```{r PrPSepdif,fig.cap="Prior predictive simulation for epithelial differentiation."}
+new_title <- c("p = Normal(0, 0.15)", "p = Normal(0, 1.5)", "p = Normal(0, 10)")
+adding <- c(FALSE, TRUE, TRUE)
+par(mfrow=c(1,3) ) # 3 plots in 1 row 
+for ( d in 1:3) 
+{ sigma <- c(0.15,1.5 ,15 ) 
+alpha <- rnorm(1e4, mean = 0, sd = sigma[d])
+p <- inv_logit(alpha)
+dens( p, main = new_title[d],xlim=c(0,1), xlab = "Probability of Epithelial Differentiation")
+}
+```
+
+### Model coefficients
+
+Inference for Stan model: 4 chains, each with iter=1000; warmup=500; thin=1; post-warmup draws per chain=500, total post-warmup draws=2000.
+
+Parameter | mean | sd | 5.5% |94.5% | n_eff | $\hat{R}4$  |
+----------|------|----|------|------|-------|----------|
+$z_1$ |  0.27 |0.96 |-1.27  |1.80  |1421     |1
+$z_2$ | -0.26 |1.00 |-1.88  |1.34  |1485     |1
+$z_3$ | -0.33 |0.88 |-1.67  |1.09  |1314     |1
+$z_4$ |  0.42 |0.86 |-0.97  |1.77   |994     |1
+$\bar{\alpha}$ | 0.03 |0.70 |-1.13  |1.08   |691    | 1
+$\sigma$ | 0.76 |0.69  |0.04  |2.03   |786   |  1
+
