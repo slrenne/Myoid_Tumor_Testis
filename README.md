@@ -11,4 +11,11 @@ We here intend to describe 4 cases of this rare entity and to summarize clinico-
 ## This repository
 This repository contains the data used for the analysis and the suppementary material, methods and results, describing sarching strategy of the literature, the models, the prior predictive simulations, the script for the analysis and the model coefficients. 
 
+### Cite the work as
+S.L. Renne, M. Valeri, A. Tosoni, A. Bertolotti, R. Rossi, G. Renne, and M. Colecchia. _Myoid gonadal tumor. Case series, systematic review and Bayesian analysis._ 
+__Virchows Archiv__ (2020).
+
+### or download the .bib file 
+<a href="https://github.com/slrenne/Myoid_Tumor_Testis/blob/master/Citation.bib">Here</a>
+
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
